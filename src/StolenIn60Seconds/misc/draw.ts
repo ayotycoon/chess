@@ -33,13 +33,7 @@ function drawLines(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, hor
 }
 
 
-export const draw = (canvas: HTMLCanvasElement | null) => {
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    canvas.width = 1000;
-    canvas.height = 1000;
-
+function drawGrid(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     // Add behind elements.
     ctx.globalCompositeOperation = 'destination-under'
     // Now draw!
@@ -48,8 +42,21 @@ export const draw = (canvas: HTMLCanvasElement | null) => {
 
     drawLines(canvas, ctx, true)
     drawLines(canvas, ctx, false)
+}
 
-    new Scene1(ctx)
+export const draw = (canvas: HTMLCanvasElement | null, canvasContainer: HTMLDivElement | null) => {
+    if (!canvas || !canvasContainer) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    canvas.width = 1000;
+    canvas.height = 1000;
+
+    drawGrid(canvas, ctx)
+
+
+    new Scene1(canvas,ctx,canvasContainer, () => {
+        drawGrid(canvas, ctx)
+    })
 
 };
 

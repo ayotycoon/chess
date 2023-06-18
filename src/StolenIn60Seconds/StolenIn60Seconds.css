@@ -3,9 +3,8 @@
 
   background-color: #3c3f44;
   height: calc(100vh - 46px);
-  overflow: auto;
-
   font-size: calc(10px + 2vmin);
   box-sizing: border-box;
+  overflow: hidden;
 
 }

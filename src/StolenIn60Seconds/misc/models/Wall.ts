@@ -3,27 +3,21 @@ import {Position} from "../types";
 import Item from "./Item";
 
 class Wall extends Item{
-    private ctx: CanvasRenderingContext2D;
-    private horizontal = false;
+    private type:string;
 
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, horizontal = false,style?: any) {
-        super(style);
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, type = 'V',style?: any) {
+        super(ctx,gridX,gridY,position, style);
         this.ctx = ctx;
-        this.horizontal = horizontal || false;
-        if (position) {
-            this.style.position = position
-            if(!horizontal){
-                console.log('hh')
-            }
-        } else this.style.position = gridToPosition(gridX, gridY);
-        if (horizontal) {
+        this.type = type;
+
+        if (type == 'H') {
             const temp = this.style.dimensions.width;
             this.style.dimensions.width = this.style.dimensions.height;
             this.style.dimensions.height = temp;
         }
 
         this.draw.all();
-        this.calculateBoundaries()
+
 
     }
     public updateGrid(gridX: number, gridY: number) {
@@ -31,7 +25,7 @@ class Wall extends Item{
         this.draw.all();
 
     }
-    private draw = {
+    public draw = {
         rect: () => {
             this.ctx.beginPath();
 
@@ -47,7 +41,7 @@ class Wall extends Item{
 
         },
         lines: () => {
-            if (!this.horizontal) {
+            if (this.type === 'V' || this.type === 'B') {
                 const diff = this.style.dimensions.height / this.style.noOfLines;
                 for (let i = 0; i < this.style.noOfLines; i++) {
                     const _height = (this.style.dimensions.width / 2) + (i * diff);
@@ -65,7 +59,11 @@ class Wall extends Item{
 
                     this.ctx.stroke();
                 }
-            } else {
+                return;
+            }
+
+
+            if(this.type == 'H'){
                 const diff = this.style.dimensions.width / this.style.noOfLines;
                 for (let i = 0; i < this.style.noOfLines; i++) {
                     const _width = (this.style.dimensions.height / 2) + (i * diff);
@@ -88,6 +86,7 @@ class Wall extends Item{
         },
         all: () => {
 
+
             this.draw.rect();
             this.draw.lines();
         }
@@ -97,21 +96,20 @@ class Wall extends Item{
 
 export class HWall extends Wall {
     constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, true)
+        super(ctx, gridX, gridY, position, 'H')
     }
 
 }
 export class VWall extends Wall {
     constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        console.log(position)
-        super(ctx, gridX, gridY, position, false)
+        super(ctx, gridX, gridY, position, 'V')
     }
 
 }
 
 export class BWall extends Wall{
     constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, false, {dimensions:{height:20,width:20},noOfLines: 2})
+        super(ctx, gridX, gridY, position, 'B', {dimensions:{height:20,width:20},noOfLines: 2})
     }
 
 }
