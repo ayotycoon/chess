@@ -1,5 +1,5 @@
 import {useContext, useEffect, useRef, useState} from "react";
-import { Link, useHistory } from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {StateContext} from "./StateProvider";
 
 
@@ -10,13 +10,15 @@ function NavBar() {
     return (
         <nav className="navbar navbar-light bg-light">
             <span>
-                {history.location.pathname != '/' && <span onClick={()=>history.goBack()}  style={{width:'50px',cursor:'pointer'}}  className="text-center d-inline-block">
+                {history.location.pathname != '/' &&
+                    <span onClick={() => history.goBack()} style={{width: '50px', cursor: 'pointer'}}
+                          className="text-center d-inline-block">
                     <i className="fa fa-arrow-left"> </i>
                 </span>}
 
                 <Link className="navbar-brand" to="/">
-                    <div style={{width:'50px'}} className="d-inline-block text-center" >
-                    <img src="favicon.png" width="25" height="25"   className="align-top" alt="" />
+                    <div style={{width: '50px'}} className="d-inline-block text-center">
+                    <img src="favicon.png" width="25" height="25" className="align-top" alt=""/>
                     </div>
                  
                     <span className=" d-inline-block">
@@ -24,10 +26,12 @@ function NavBar() {
                     </span>
                 </Link>
 
-              <span onClick={()=>setOptionsClicked(!optionsClicked)}  style={{width:'50px',cursor:'pointer'}}  className="text-center d-inline-block">
-                    <i className="fa fa-cog"> </i>
-                </span>
-
+                <form style={{float:'right'}}>
+                  <span onClick={() => setOptionsClicked(!optionsClicked)} style={{width: '50px', cursor: 'pointer'}}
+                        className="text-center d-inline-block form-inline">
+                        <i className="fa fa-cog"> </i>
+                    </span>
+                </form>
 
             </span>
         </nav>
