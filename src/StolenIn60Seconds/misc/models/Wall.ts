@@ -3,12 +3,13 @@ import {Position} from "../types";
 import Item from "./Item";
 
 class Wall extends Item{
-    private type:string;
+    private readonly type:string;
 
     constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, type = 'V',style?: any) {
         super(ctx,gridX,gridY,position, style);
         this.ctx = ctx;
         this.type = type;
+        this.style.noOfLines =  this.style.dimensions.height/10;
 
         if (type == 'H') {
             const temp = this.style.dimensions.width;
@@ -95,21 +96,14 @@ class Wall extends Item{
 }
 
 export class HWall extends Wall {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, 'H')
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined,style?:any) {
+        super(ctx, gridX, gridY, position, 'H',style)
     }
 
 }
 export class VWall extends Wall {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, 'V')
-    }
-
-}
-
-export class BWall extends Wall{
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, 'B', {dimensions:{height:20,width:20},noOfLines: 2})
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined,style?:any) {
+        super(ctx, gridX, gridY, position, 'V',style)
     }
 
 }

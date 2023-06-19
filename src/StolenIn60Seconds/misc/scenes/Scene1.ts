@@ -1,14 +1,16 @@
-import {VWall, HWall, BWall} from "../models/Wall";
+import {VWall, HWall} from "../models/Wall";
 import Item from "../models/Item";
 import {globalKeyboardEvent, gridToPosition, windowUtils} from "../util";
 import Circle from "../models/Circle";
-import {Flower} from "../models/ImageItem";
+import {Flower, HCar} from "../models/ImageItem";
+import {HGate, VGate} from "../models/Gate";
 
+const MOVEMENT_SPEED = 3;
 
 export default class Scene1 {
     pos = {
-        x: 10,
-        y: 10,
+        x: 6,
+        y: 9,
         frameX: 0,
         frameY: 0,
     }
@@ -40,7 +42,7 @@ export default class Scene1 {
             if (e.keyCode == 38 || type === 'up') {
                 valid = true;
                 // up arrow
-                const move = this.player.action.up();
+                const move = this.player.action.up(MOVEMENT_SPEED);
                 if (!this.validate.move()) return move.reject();
                 move.accept()
                 this.pos.frameY -= 20
@@ -55,11 +57,11 @@ export default class Scene1 {
             } else if (e.keyCode == 40 || type === 'down') {
                 valid = true;
                 // down arrow
-                const move = this.player.action.down();
+                const move = this.player.action.down(MOVEMENT_SPEED);
                 if (!this.validate.move()) return move.reject();
                 move.accept()
                 this.pos.frameY += 20
-                if ((this.pos.frameY + 100) >= windowUtils.y) {
+                if ((this.pos.frameY + 100) >= windowUtils.y/3) {
                     let dist = (canvasContainer.clientHeight / 2);
                     let total = this.canvasContainer.scrollTop + dist;
 
@@ -82,7 +84,7 @@ export default class Scene1 {
             } else if (e.keyCode == 37 || type === 'left') {
                 valid = true;
                 // left arrow
-                const move = this.player.action.left();
+                const move = this.player.action.left(MOVEMENT_SPEED);
                 if (!this.validate.move()) return move.reject();
                 move.accept()
                 this.pos.frameX -= 20
@@ -97,11 +99,11 @@ export default class Scene1 {
             } else if (e.keyCode == 39 || type === 'right') {
                 valid = true;
                 // right arrow
-                const move = this.player.action.right();
+                const move = this.player.action.right(MOVEMENT_SPEED);
                 if (!this.validate.move()) return move.reject();
                 move.accept()
                 this.pos.frameX += 20
-                if ((this.pos.frameX + 100) >= windowUtils.x) {
+                if ((this.pos.frameX + 100) >= windowUtils.x/2) {
                     let dist = (canvasContainer.clientWidth / 2);
                     let total = this.canvasContainer.scrollLeft + dist;
 
@@ -152,19 +154,20 @@ export default class Scene1 {
             return;
         }
 
-        this.player = new Circle(this.ctx, this.pos.x + (-1.1 * 5), this.pos.y + (-1.1 * 5));
+        this.player = new Circle(this.ctx, this.pos.x + (-0.6 * 5), this.pos.y + (-1.2 * 5));
         this.pos.frameX = this.player.getStyle().position.x;
         this.pos.frameY = this.player.getStyle().position.y;
         this.scene = [
             [this.player],
-            [new BWall(this.ctx, this.pos.x, this.pos.y + (0.0 * 5)), new HWall(this.ctx, this.pos.x + (0.2 * 5), this.pos.y + (0 * 5)), new HWall(this.ctx, this.pos.x + (1.2 * 5), this.pos.y + (0 * 5)), new HWall(this.ctx, this.pos.x + (2.2 * 5), this.pos.y + (0 * 5)), new HWall(this.ctx, this.pos.x + (3.2 * 5), this.pos.y + (0 * 5)), new HWall(this.ctx, this.pos.x + (4.2 * 5), this.pos.y + (0 * 5)), new HWall(this.ctx, this.pos.x + (5.2 * 5), this.pos.y + (0 * 5)), new BWall(this.ctx, this.pos.x + (6.2 * 5), this.pos.y + (0 * 5))],
-            [new VWall(this.ctx, this.pos.x, this.pos.y + (0.2 * 5)), null, null, null, null, new VWall(this.ctx, this.pos.x + (6.2 * 5), this.pos.y + (0.2 * 5))],
-            [new VWall(this.ctx, this.pos.x, this.pos.y + (1.2 * 5)), null, null, null, null, new VWall(this.ctx, this.pos.x + (6.2 * 5), this.pos.y + (1.2 * 5))],
-            [new VWall(this.ctx, this.pos.x, this.pos.y + (2.2 * 5)), null, null, null, null, new VWall(this.ctx, this.pos.x + (6.2 * 5), this.pos.y + (2.2 * 5))],
-            [new VWall(this.ctx, this.pos.x, this.pos.y + (3.2 * 5)), null, null, null, null, new VWall(this.ctx, this.pos.x + (6.2 * 5), this.pos.y + (3.2 * 5))],
-            [new VWall(this.ctx, this.pos.x, this.pos.y + (4.2 * 5)), null, null, null, null, new VWall(this.ctx, this.pos.x + (6.2 * 5), this.pos.y + (4.2 * 5))],
-            [new VWall(this.ctx, this.pos.x, this.pos.y + (5.2 * 5)), null, null, null, null, new VWall(this.ctx, this.pos.x + (6.2 * 5), this.pos.y + (5.2 * 5))],
-            [new BWall(this.ctx, this.pos.x, this.pos.y + (6.2 * 5)), new HWall(this.ctx, this.pos.x + (0.2 * 5), this.pos.y + (6.2 * 5)), new HWall(this.ctx, this.pos.x + (1.2 * 5), this.pos.y + (6.2 * 5)), new HWall(this.ctx, this.pos.x + (2.2 * 5), this.pos.y + (6.2 * 5)), new HWall(this.ctx, this.pos.x + (3.2 * 5), this.pos.y + (6.2 * 5)), new HWall(this.ctx, this.pos.x + (4.2 * 5), this.pos.y + (6.2 * 5)), new HWall(this.ctx, this.pos.x + (5.2 * 5), this.pos.y + (6.2 * 5)), new BWall(this.ctx, this.pos.x + (6.2 * 5), this.pos.y + (6.2 * 5))],
+            [new HCar(this.ctx, this.pos.x + (-1.0 * 5), this.pos.y + (-1.4 * 5))],
+
+            [new HWall(this.ctx, this.pos.x, this.pos.y + (0.0 * 5),undefined,{dimensions:{height:140,width:20}}), new HGate(this.ctx, this.pos.x + (1.4 * 5), this.pos.y + (0 * 5)), new HWall(this.ctx, this.pos.x + (2.2 * 5), this.pos.y + (0 * 5),undefined,{dimensions:{height:500,width:20}})],
+
+            [new VWall(this.ctx, this.pos.x, this.pos.y + (0.2 * 5), undefined,{dimensions:{width:20,height:360}}),new VWall(this.ctx, this.pos.x + (7.0 * 5), this.pos.y + (0.2 * 5),undefined,{dimensions:{width:20,height:740}})],
+            [new VGate(this.ctx, this.pos.x, this.pos.y + (3.8 * 5))],
+            [new VWall(this.ctx, this.pos.x, this.pos.y + (4.6 * 5),undefined,{dimensions:{height:300,width:20}})],
+
+            [ new HWall(this.ctx, this.pos.x + (0.0 * 5), this.pos.y + (7.6 * 5),undefined,{dimensions:{height:720,width:20}}),],
 
             /**
              * items

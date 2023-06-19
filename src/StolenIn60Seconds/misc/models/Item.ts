@@ -3,7 +3,6 @@ import {Position} from "../types";
 
 
 export default class Item{
-
     protected ctx: CanvasRenderingContext2D;
     protected style = {
         position: {
@@ -17,7 +16,7 @@ export default class Item{
         },
         dimensions: {
             width: 20,
-            height: 100
+            height: 120
         },
         color: 'black',
         noOfLines: 10,
@@ -29,8 +28,7 @@ export default class Item{
 
     constructor(ctx: CanvasRenderingContext2D,  gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined,style?: any) {
         this.ctx = ctx;
-        // @ ts-ignore
-        if(style) this.style = {...this.style, ...style};
+
         if (position) {
             this.style.position = position;
             this.style.grid = positionToGrid(position.x,position.y)
@@ -40,6 +38,11 @@ export default class Item{
                 x:gridX,
                 y:gridY
             }
+        }
+
+        // @ ts-ignore
+        if(style) {
+            this.style = {...this.style, ...style};
         }
         this.calculateBoundaries()
     }

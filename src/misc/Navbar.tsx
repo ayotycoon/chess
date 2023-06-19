@@ -25,7 +25,7 @@ function NavBar() {
                 </Link>
 
               <span onClick={()=>setOptionsClicked(!optionsClicked)}  style={{width:'50px',cursor:'pointer'}}  className="text-center d-inline-block">
-                    <i className="fa fa-user"> </i>
+                    <i className="fa fa-cog"> </i>
                 </span>
 
 
