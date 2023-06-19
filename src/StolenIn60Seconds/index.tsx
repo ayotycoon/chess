@@ -16,9 +16,9 @@ function Controls() {
 
 
         <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
+            <div onClick={() => globalKeyboardEvent.emit('left')} className={'button'}><i className="fa fa-arrow-left"></i></div>
 
             <div onClick={() => globalKeyboardEvent.emit('right')} className={'button'}><i className="fa fa-arrow-right"></i></div>
-            <div onClick={() => globalKeyboardEvent.emit('left')} className={'button'}><i className="fa fa-arrow-left"></i></div>
 
         </div>
         </div>
