@@ -12,7 +12,7 @@ export const NAVS = [
     },    {
         to:'/stolen-in-60-seconds',
         name:'Stolen in 60 seconds',
-        img:process.env.PUBLIC_URL + '/assets/checkers-banner.png'
+        img:process.env.PUBLIC_URL + '/assets/ss60-banner.png'
     }
 ]
 

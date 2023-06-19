@@ -1,18 +1,42 @@
 import './StolenIn60Seconds.css';
-import {useEffect, useRef} from "react";
+import {useContext, useEffect, useRef} from "react";
 import {draw} from "./misc/draw";
+import {StateContext} from "../misc/StateProvider";
+import {globalKeyboardEvent} from "./misc/util";
 
+function Controls() {
+    return <div style={{position: 'absolute', bottom: 0, width: '100vw', background: 'white', zIndex: 10}}>
+
+        <div style={{display: 'flex', justifyContent:'space-evenly'}}>
+            <div onClick={() => globalKeyboardEvent.emit('up')} className={'button'}><i className="fa fa-arrow-up"></i>
+            </div>
+            <div onClick={() => globalKeyboardEvent.emit('down')} className={'button'}><i
+                className="fa fa-arrow-down"></i></div>
+        </div>
+
+
+        <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
+
+            <div onClick={() => globalKeyboardEvent.emit('right')} className={'button'}><i className="fa fa-arrow-right"></i></div>
+            <div onClick={() => globalKeyboardEvent.emit('left')} className={'button'}><i className="fa fa-arrow-left"></i></div>
+
+        </div>
+        </div>
+}
 
 function StolenIn60SecondsGame() {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const canvasContainerRef = useRef<HTMLDivElement>(null)
 
-    useEffect(()=>{
-        draw(canvasRef.current,canvasContainerRef.current)
-    },[])
+    const {optionsClicked, setShowNav} = useContext(StateContext);
+
+    useEffect(() => {
+        draw(canvasRef.current, canvasContainerRef.current)
+    }, [])
     return (
         <div ref={canvasContainerRef} className="StolenIn60SecondsGame">
             <canvas ref={canvasRef}></canvas>
+            {optionsClicked && <Controls/>}
         </div>
     );
 }

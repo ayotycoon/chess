@@ -9,21 +9,33 @@ export default class Circle extends Item {
 
     action = {
         goTo: (gridX: number, gridY: number) => {
+            const prev = {...this.style.grid};
+
+            const res = {
+                reject: () => {
+                    this.updateGrid(prev.x, prev.y);
+                    this.draw.all();
+                },
+                accept: () => {
+                    this.draw.all();
+                }
+
+            }
             this.updateGrid(gridX, gridY);
-            this.draw.all();
+            return res;
 
         },
-        down:(n = 1) => {
-            this.action.goTo(this.style.grid.x,this.style.grid.y+n)
+        down: (n = 1) => {
+            return this.action.goTo(this.style.grid.x, this.style.grid.y + n)
         },
-        up:(n = 1) => {
-            this.action.goTo(this.style.grid.x,this.style.grid.y-n)
+        up: (n = 1) => {
+            return this.action.goTo(this.style.grid.x, this.style.grid.y - n)
         },
-        right:(n = 1) => {
-            this.action.goTo(this.style.grid.x+n,this.style.grid.y)
+        right: (n = 1) => {
+            return this.action.goTo(this.style.grid.x + n, this.style.grid.y)
         },
-        left:(n = 1) => {
-            this.action.goTo(this.style.grid.x-n,this.style.grid.y)
+        left: (n = 1) => {
+            return this.action.goTo(this.style.grid.x - n, this.style.grid.y)
         }
     }
     public draw = {
@@ -32,7 +44,7 @@ export default class Circle extends Item {
             this.ctx.arc(
                 this.style.position.x,
                 this.style.position.y,
-                this.style.dimensions.width / 2,
+                (this.style.dimensions.width) / 2,
                 0,
                 Math.PI * 2,
                 false
@@ -42,8 +54,6 @@ export default class Circle extends Item {
             this.ctx.fill();
         },
         all: () => {
-
-
             this.draw.arc();
         }
     }

@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import { Link, useHistory } from "react-router-dom";
+import {StateContext} from "./StateProvider";
 
 
 function NavBar() {
     const history = useHistory();
+    const {optionsClicked, setOptionsClicked} = useContext(StateContext)
 
     return (
         <nav className="navbar navbar-light bg-light">
@@ -21,6 +23,12 @@ function NavBar() {
                     Games
                     </span>
                 </Link>
+
+              <span onClick={()=>setOptionsClicked(!optionsClicked)}  style={{width:'50px',cursor:'pointer'}}  className="text-center d-inline-block">
+                    <i className="fa fa-user"> </i>
+                </span>
+
+
             </span>
         </nav>
     )

@@ -49,7 +49,7 @@ export const draw = (canvas: HTMLCanvasElement | null, canvasContainer: HTMLDivE
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     canvas.width = 1000;
-    canvas.height = 1000;
+    canvas.height = 1400;
 
     drawGrid(canvas, ctx)
 
