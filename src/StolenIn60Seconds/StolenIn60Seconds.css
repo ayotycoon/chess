@@ -1,9 +1,12 @@
-html,body{
+html,body,#root{
+    height: 100vh;
+    width: 100vw;
     overflow: hidden;
+
 }
 .StolenIn60SecondsGame {
     text-align: center;
-
+position:relative;
     background-color: #3c3f44;
     height: calc(100vh - 46px);
     font-size: calc(10px + 2vmin);

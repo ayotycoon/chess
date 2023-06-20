@@ -46,7 +46,7 @@ function BottomPanel() {
 
     },[])
     return (
-        <div style={{position: 'absolute', bottom: '0px', width: '100vw', background: '#213c42', zIndex: 10}} className={'p-2'}>
+        <div style={{position: 'fixed', bottom: '0px', width: '100vw', background: '#213c42', zIndex: 10}} className={'p-2'}>
 <div style={{textAlign:'right'}}>
     <TimePill time={stageProps.time} />
 </div>
