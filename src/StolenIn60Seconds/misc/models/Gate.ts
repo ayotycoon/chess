@@ -1,4 +1,3 @@
-import {gridToPosition} from "../util";
 import {Position, WallType} from "../types";
 import Item from "./Item";
 

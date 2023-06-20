@@ -1,6 +1,6 @@
 import {HWall, VWall} from "../models/Wall";
 import Item from "../models/Item";
-import {globalKeyboardEvent, windowUtils} from "../util";
+import {keyboardObs, windowUtils} from "../utils";
 import Circle from "../models/Circle";
 import {Flower, HCar} from "../models/ImageItem";
 import {HGate, VGate} from "../models/Gate";
@@ -142,7 +142,9 @@ export default class Scene1 {
 
         };
 
-        globalKeyboardEvent.cb = this.keyCb;
+        keyboardObs.subscribe((val) => {
+            this.keyCb(null,val)
+        })
 
         document.addEventListener('keydown', this.keyCb, true)
 
@@ -215,10 +217,10 @@ export default class Scene1 {
                     const boundary = el.getBoundaries();
                     for(let pos of increments){
                         if(
-                            (isHorizontal ? pos: playerPosition.x) > boundary[0][0][0]
-                            && (isHorizontal ? pos: playerPosition.x) <  boundary[0][1][0]
-                            && (isVertical ? pos: playerPosition.y) >  boundary[0][0][1]
-                            && (isVertical ? pos: playerPosition.y) <  boundary[1][0][1]
+                            (isHorizontal ? pos: playerPosition.x) >= boundary[0][0][0]
+                            && (isHorizontal ? pos: playerPosition.x) <=  boundary[0][1][0]
+                            && (isVertical ? pos: playerPosition.y) >=  boundary[0][0][1]
+                            && (isVertical ? pos: playerPosition.y) <=  boundary[1][0][1]
 
                         ) {
                             el.debug.all()

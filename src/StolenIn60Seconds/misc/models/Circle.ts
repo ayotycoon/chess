@@ -1,5 +1,6 @@
 import Item from "./Item";
 import {Position} from "../types";
+import {stageObs} from "../utils";
 
 export default class Circle extends Item {
     private movementHistory: {x:number;y:number}[] = [];
@@ -22,6 +23,7 @@ export default class Circle extends Item {
                 },
                 accept: () => {
                     this.movementHistory.push({...this.state.position})
+                    stageObs.emit({time:this.movementHistory.length-1})
                     this.draw.all();
                 }
 

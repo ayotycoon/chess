@@ -1,4 +1,4 @@
-import {gridToPosition, positionToGrid} from "../util";
+import {gridToPosition, positionToGrid} from "../utils";
 import {Position} from "../types";
 
 
