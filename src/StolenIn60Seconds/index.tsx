@@ -3,22 +3,23 @@ import {useContext, useEffect, useRef} from "react";
 import {draw} from "./misc/draw";
 import {StateContext} from "../misc/StateProvider";
 import {globalKeyboardEvent} from "./misc/util";
+import {Direction} from "./misc/types";
 
 function Controls() {
     return <div style={{position: 'absolute', bottom: 0, width: '100vw', background: 'white', zIndex: 10}}>
 
         <div style={{display: 'flex', justifyContent:'space-evenly'}}>
-            <div onClick={() => globalKeyboardEvent.emit('up')} className={'button'}><i className="fa fa-arrow-up"></i>
+            <div onClick={() => globalKeyboardEvent.emit(Direction.up)} className={'button'}><i className="fa fa-arrow-up"></i>
             </div>
-            <div onClick={() => globalKeyboardEvent.emit('down')} className={'button'}><i
+            <div onClick={() => globalKeyboardEvent.emit(Direction.down)} className={'button'}><i
                 className="fa fa-arrow-down"></i></div>
         </div>
 
 
         <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
-            <div onClick={() => globalKeyboardEvent.emit('left')} className={'button'}><i className="fa fa-arrow-left"></i></div>
+            <div onClick={() => globalKeyboardEvent.emit(Direction.left)} className={'button'}><i className="fa fa-arrow-left"></i></div>
 
-            <div onClick={() => globalKeyboardEvent.emit('right')} className={'button'}><i className="fa fa-arrow-right"></i></div>
+            <div onClick={() => globalKeyboardEvent.emit(Direction.right)} className={'button'}><i className="fa fa-arrow-right"></i></div>
 
         </div>
         </div>

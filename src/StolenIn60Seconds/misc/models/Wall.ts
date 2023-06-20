@@ -5,16 +5,17 @@ import Item from "./Item";
 class Wall extends Item{
     private readonly type:string;
 
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, type = 'V',style?: any) {
-        super(ctx,gridX,gridY,position, style);
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, type = 'V',state?: any) {
+        super(ctx,gridX,gridY,position, state);
         this.ctx = ctx;
         this.type = type;
-        this.style.noOfLines =  this.style.dimensions.height/10;
+        this.state.noOfLines =  this.state.dimensions.height/10;
 
         if (type == 'H') {
-            const temp = this.style.dimensions.width;
-            this.style.dimensions.width = this.style.dimensions.height;
-            this.style.dimensions.height = temp;
+            const temp = this.state.dimensions.width;
+            this.state.dimensions.width = this.state.dimensions.height;
+            this.state.dimensions.height = temp;
+            this.calculateBoundaries();
         }
 
         this.draw.all();
@@ -30,12 +31,12 @@ class Wall extends Item{
         rect: () => {
             this.ctx.beginPath();
 
-            this.ctx.strokeStyle = this.style.color;
+            this.ctx.strokeStyle = this.state.color;
             this.ctx.strokeRect(
-                this.style.position.x,
-                this.style.position.y,
-                this.style.dimensions.width,
-                this.style.dimensions.height,
+                this.state.position.x,
+                this.state.position.y,
+                this.state.dimensions.width,
+                this.state.dimensions.height,
             );
 
             this.ctx.fill();
@@ -43,19 +44,19 @@ class Wall extends Item{
         },
         lines: () => {
             if (this.type === 'V' || this.type === 'B') {
-                const diff = this.style.dimensions.height / this.style.noOfLines;
-                for (let i = 0; i < this.style.noOfLines; i++) {
-                    const _height = (this.style.dimensions.width / 2) + (i * diff);
+                const diff = this.state.dimensions.height / this.state.noOfLines;
+                for (let i = 0; i < this.state.noOfLines; i++) {
+                    const _height = (this.state.dimensions.width / 2) + (i * diff);
 
-                    const heightWithPosition = _height + this.style.position.y;
-                    const widthWithPosition = this.style.position.x + this.style.dimensions.width
+                    const heightWithPosition = _height + this.state.position.y;
+                    const widthWithPosition = this.state.position.x + this.state.dimensions.width
 
-                    if (_height > this.style.dimensions.height) {
+                    if (_height > this.state.dimensions.height) {
 
                     }
                     this.ctx.beginPath();
-                    this.ctx.strokeStyle = this.style.color;
-                    this.ctx.moveTo(this.style.position.x, this.style.position.y + (i * diff));
+                    this.ctx.strokeStyle = this.state.color;
+                    this.ctx.moveTo(this.state.position.x, this.state.position.y + (i * diff));
                     this.ctx.lineTo(widthWithPosition, heightWithPosition);
 
                     this.ctx.stroke();
@@ -65,19 +66,19 @@ class Wall extends Item{
 
 
             if(this.type == 'H'){
-                const diff = this.style.dimensions.width / this.style.noOfLines;
-                for (let i = 0; i < this.style.noOfLines; i++) {
-                    const _width = (this.style.dimensions.height / 2) + (i * diff);
+                const diff = this.state.dimensions.width / this.state.noOfLines;
+                for (let i = 0; i < this.state.noOfLines; i++) {
+                    const _width = (this.state.dimensions.height / 2) + (i * diff);
 
-                    const widthWithPosition = _width + this.style.position.x;
-                    const heightWithPosition = this.style.position.y + this.style.dimensions.height
+                    const widthWithPosition = _width + this.state.position.x;
+                    const heightWithPosition = this.state.position.y + this.state.dimensions.height
 
-                    if (_width > this.style.dimensions.width) {
+                    if (_width > this.state.dimensions.width) {
 
                     }
                     this.ctx.beginPath();
-                    this.ctx.strokeStyle = this.style.color;
-                    this.ctx.moveTo(this.style.position.x + (i * diff), this.style.position.y);
+                    this.ctx.strokeStyle = this.state.color;
+                    this.ctx.moveTo(this.state.position.x + (i * diff), this.state.position.y);
                     this.ctx.lineTo(widthWithPosition, heightWithPosition);
 
                     this.ctx.stroke();

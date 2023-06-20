@@ -1,16 +1,17 @@
-import {VWall, HWall} from "../models/Wall";
+import {HWall, VWall} from "../models/Wall";
 import Item from "../models/Item";
-import {globalKeyboardEvent, gridToPosition, windowUtils} from "../util";
+import {globalKeyboardEvent, windowUtils} from "../util";
 import Circle from "../models/Circle";
 import {Flower, HCar} from "../models/ImageItem";
 import {HGate, VGate} from "../models/Gate";
+import {Direction} from "../types";
 
 const MOVEMENT_SPEED = 3;
 
 export default class Scene1 {
     pos = {
-        x: 6,
-        y: 9,
+        x: 7,
+        y: 10,
         frameX: 0,
         frameY: 0,
     }
@@ -35,15 +36,16 @@ export default class Scene1 {
 
         this.generateScenes();
 
-        this.keyCb = (e: KeyboardEvent, type?:'right'|'left'|'up'|'down') => {
+        this.keyCb = (e: KeyboardEvent, direction?:Direction) => {
             e = e || window.event;
             let valid = false;
 
-            if (e.keyCode == 38 || type === 'up') {
+            if (e.keyCode == 38 || direction === Direction.up) {
+                direction = Direction.up
                 valid = true;
                 // up arrow
                 const move = this.player.action.up(MOVEMENT_SPEED);
-                if (!this.validate.move()) return move.reject();
+                if (!this.validate.move(direction,move)) return move.reject();
                 move.accept()
                 this.pos.frameY -= 20
                 const prev = this.stack.vertical.length != 0 ? this.stack.vertical[this.stack.vertical.length - 1] : null;
@@ -54,38 +56,43 @@ export default class Scene1 {
                     this.stack.vertical.pop()
 
                 }
-            } else if (e.keyCode == 40 || type === 'down') {
+            }
+            else if (e.keyCode == 40 || direction === Direction.down) {
+                direction = Direction.down
                 valid = true;
                 // down arrow
                 const move = this.player.action.down(MOVEMENT_SPEED);
-                if (!this.validate.move()) return move.reject();
+                if (!this.validate.move(direction,move)) return move.reject();
                 move.accept()
                 this.pos.frameY += 20
-                if ((this.pos.frameY + 100) >= windowUtils.y/3) {
-                    let dist = (canvasContainer.clientHeight / 2);
-                    let total = this.canvasContainer.scrollTop + dist;
+                // if ((this.pos.frameY + 100) >= windowUtils.y/4) {
+                //     let dist = (canvasContainer.clientHeight / 2);
+                //     let total = this.canvasContainer.scrollTop + dist;
+                //
+                //     const obj = {
+                //         pos: this.player.getStyle().position.y,
+                //         scrollPos: this.canvasContainer.scrollTop,
+                //         dist,
+                //     };
+                //
+                //
+                //     if (canvasContainer.scrollHeight < total) {
+                //         total = canvasContainer.scrollHeight
+                //     }
+                //     dist = total - this.canvasContainer.scrollHeight;
+                //
+                //     this.pos.frameY -= dist;
+                //     this.stack.vertical.push(obj);
+                //     this.canvasContainer.scrollTop = total;
+                // }
 
-                    const obj = {
-                        pos: this.player.getStyle().position.y,
-                        scrollPos: this.canvasContainer.scrollTop,
-                        dist,
-                    };
-
-
-                    if (canvasContainer.scrollHeight < total) {
-                        total = canvasContainer.scrollHeight
-                    }
-                    dist = total - this.canvasContainer.scrollHeight;
-
-                    this.pos.frameY -= dist;
-                    this.stack.vertical.push(obj);
-                    this.canvasContainer.scrollTop = total;
-                }
-            } else if (e.keyCode == 37 || type === 'left') {
+            }
+            else if (e.keyCode == 37 || direction === Direction.left) {
+                direction = Direction.left
                 valid = true;
                 // left arrow
                 const move = this.player.action.left(MOVEMENT_SPEED);
-                if (!this.validate.move()) return move.reject();
+                if (!this.validate.move(direction,move)) return move.reject();
                 move.accept()
                 this.pos.frameX -= 20
                 const prev = this.stack.horizontal.length != 0 ? this.stack.horizontal[this.stack.horizontal.length - 1] : null;
@@ -96,14 +103,16 @@ export default class Scene1 {
                     this.stack.horizontal.pop()
 
                 }
-            } else if (e.keyCode == 39 || type === 'right') {
+            }
+            else if (e.keyCode == 39 || direction === Direction.right) {
+                direction = Direction.right
                 valid = true;
                 // right arrow
                 const move = this.player.action.right(MOVEMENT_SPEED);
-                if (!this.validate.move()) return move.reject();
+                if (!this.validate.move(direction,move)) return move.reject();
                 move.accept()
                 this.pos.frameX += 20
-                if ((this.pos.frameX + 100) >= windowUtils.x/2) {
+                if ((this.pos.frameX +50) >= windowUtils.x/2) {
                     let dist = (canvasContainer.clientWidth / 2);
                     let total = this.canvasContainer.scrollLeft + dist;
 
@@ -148,18 +157,20 @@ export default class Scene1 {
         if (this.scene.length) {
             this.scene.forEach(row => {
                 row.forEach(el => {
-                    el?.draw.all();
+                    if(!el)return;
+                    el.draw.all();
                 })
             })
             return;
         }
 
-        this.player = new Circle(this.ctx, this.pos.x + (-0.6 * 5), this.pos.y + (-1.2 * 5));
+        this.player = new Circle(this.ctx, this.pos.x + (-0.8 * 5), this.pos.y + (-1.4 * 5));
+        const car = new HCar(this.ctx, this.pos.x + (-1.2 * 5), this.pos.y + (-1.6 * 5))
         this.pos.frameX = this.player.getStyle().position.x;
         this.pos.frameY = this.player.getStyle().position.y;
         this.scene = [
             [this.player],
-            [new HCar(this.ctx, this.pos.x + (-1.0 * 5), this.pos.y + (-1.4 * 5))],
+            [car],
 
             [new HWall(this.ctx, this.pos.x, this.pos.y + (0.0 * 5),undefined,{dimensions:{height:140,width:20}}), new HGate(this.ctx, this.pos.x + (1.4 * 5), this.pos.y + (0 * 5)), new HWall(this.ctx, this.pos.x + (2.2 * 5), this.pos.y + (0 * 5),undefined,{dimensions:{height:500,width:20}})],
 
@@ -179,35 +190,44 @@ export default class Scene1 {
              *
              * */
             [
-                new Flower(this.ctx, this.pos.x + (1.0 * 5), this.pos.y + (3.2 * 5)),
-                new Flower(this.ctx, this.pos.x + (2.0 * 5), this.pos.y + (3.2 * 5)),
+                new Flower(this.ctx, this.pos.x + (1.2 * 5), this.pos.y + (3.6 * 5)),
+                new Flower(this.ctx, this.pos.x + (2.4 * 5), this.pos.y + (3.6 * 5)),
 
             ]
         ];
+
+
     }
 
     private validate = {
-        direction: {
-            left: (pointX: number, pointY: number, boundary: number[][][]) => {
-                if (pointX > boundary[0][0][0] && pointX < boundary[0][1][0] && pointY > boundary[0][1][1] && pointY > boundary[1][1][1]) return false
+        move: (direction:Direction,move:{prevPosition: {x: number, y: number}, reject: () => void, accept: () => void}) => {
+            const isVertical = direction == Direction.up || direction == Direction.down;
+            const isHorizontal = !isVertical;
+            const increments  = [1,2,3,4,5,6].map((i,) => ((isVertical ? move.prevPosition.y: move.prevPosition.x) + (((direction == Direction.up || direction === Direction.left)? -i : i)*10)));
 
-                return true;
+            if(isVertical)console.log({increments})
 
-            }
-
-
-        },
-
-        move: () => {
-
-            const playerBoundary = this.player.getBoundaries();
+            const playerPosition = this.player.getStyle().position;
 
             for (let row of this.scene) {
                 for (let el of row) {
-                    if (!el) continue;
+                    if (!el || el instanceof Circle|| el instanceof HCar) continue;
                     const boundary = el.getBoundaries();
+                    for(let pos of increments){
+                        if(
+                            (isHorizontal ? pos: playerPosition.x) > boundary[0][0][0]
+                            && (isHorizontal ? pos: playerPosition.x) <  boundary[0][1][0]
+                            && (isVertical ? pos: playerPosition.y) >  boundary[0][0][1]
+                            && (isVertical ? pos: playerPosition.y) <  boundary[1][0][1]
 
-                    //  if(!leftCheck(playerBoundary[0][0][0],playerBoundary[0][0][1],boundary)) return false
+                        ) {
+                            el.debug.all()
+                            console.log(el)
+                            return false;
+                        }
+
+
+                    }
 
                 }
             }

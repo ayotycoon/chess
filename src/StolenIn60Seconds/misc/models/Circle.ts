@@ -2,21 +2,26 @@ import Item from "./Item";
 import {Position} from "../types";
 
 export default class Circle extends Item {
+    private movementHistory: {x:number;y:number}[] = [];
     constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, {dimensions: {height: 20, width: 20}, noOfLines: 2})
+        super(ctx, gridX, gridY, position, {dimensions: {height: 10, width: 10}})
+        this.movementHistory.push({x:this.state.position.x,y:this.state.position.y})
         this.draw.all()
     }
 
     action = {
         goTo: (gridX: number, gridY: number) => {
-            const prev = {...this.style.grid};
+            const prevGrid = {...this.state.grid};
+            const previousPosition = {...this.state.position};
 
             const res = {
+                prevPosition: previousPosition,
                 reject: () => {
-                    this.updateGrid(prev.x, prev.y);
+                    this.updateGrid(prevGrid.x, prevGrid.y);
                     this.draw.all();
                 },
                 accept: () => {
+                    this.movementHistory.push({...this.state.position})
                     this.draw.all();
                 }
 
@@ -26,34 +31,50 @@ export default class Circle extends Item {
 
         },
         down: (n = 1) => {
-            return this.action.goTo(this.style.grid.x, this.style.grid.y + n)
+            return this.action.goTo(this.state.grid.x, this.state.grid.y + n)
         },
         up: (n = 1) => {
-            return this.action.goTo(this.style.grid.x, this.style.grid.y - n)
+            return this.action.goTo(this.state.grid.x, this.state.grid.y - n)
         },
         right: (n = 1) => {
-            return this.action.goTo(this.style.grid.x + n, this.style.grid.y)
+            return this.action.goTo(this.state.grid.x + n, this.state.grid.y)
         },
         left: (n = 1) => {
-            return this.action.goTo(this.style.grid.x - n, this.style.grid.y)
+            return this.action.goTo(this.state.grid.x - n, this.state.grid.y)
         }
     }
     public draw = {
+        history: () => {
+            this.movementHistory.forEach((curr, i) => {
+                if(i == 0) return;
+                const prev = this.movementHistory[i-1];
+                this.ctx.beginPath();
+                this.ctx.strokeStyle = this.state.color;
+                this.ctx.strokeRect(
+                    prev.x,
+                    prev.y,
+                    curr.x - prev.x,
+                    curr.y - prev.y,
+                );
+            })
+
+        },
         arc: () => {
             this.ctx.beginPath();
             this.ctx.arc(
-                this.style.position.x,
-                this.style.position.y,
-                (this.style.dimensions.width) / 2,
+                this.state.position.x,
+                this.state.position.y,
+                (this.state.dimensions.width) / 2,
                 0,
                 Math.PI * 2,
                 false
             );
 
-            this.ctx.fillStyle = this.style.color;
+            this.ctx.fillStyle = this.state.color;
             this.ctx.fill();
         },
         all: () => {
+            this.draw.history();
             this.draw.arc();
         }
     }

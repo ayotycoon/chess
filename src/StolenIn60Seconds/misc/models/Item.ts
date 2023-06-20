@@ -4,7 +4,7 @@ import {Position} from "../types";
 
 export default class Item{
     protected ctx: CanvasRenderingContext2D;
-    protected style = {
+    protected state = {
         position: {
             x: 0,
             y: 0,
@@ -30,11 +30,11 @@ export default class Item{
         this.ctx = ctx;
 
         if (position) {
-            this.style.position = position;
-            this.style.grid = positionToGrid(position.x,position.y)
+            this.state.position = position;
+            this.state.grid = positionToGrid(position.x,position.y)
         } else {
-            this.style.position = gridToPosition(gridX, gridY);
-            this.style.grid = {
+            this.state.position = gridToPosition(gridX, gridY);
+            this.state.grid = {
                 x:gridX,
                 y:gridY
             }
@@ -42,7 +42,7 @@ export default class Item{
 
         // @ ts-ignore
         if(style) {
-            this.style = {...this.style, ...style};
+            this.state = {...this.state, ...style};
         }
         this.calculateBoundaries()
     }
@@ -56,23 +56,24 @@ export default class Item{
 
     }
     public  calculateBoundaries(){
-        this.boundaries[0][0][0] = this.style.position.x;
-        this.boundaries[0][0][1] = this.style.position.y;
+        this.boundaries[0][0][0] = this.state.position.x;
+        this.boundaries[0][0][1] = this.state.position.y;
 
-        this.boundaries[0][1][0] = this.style.position.x + this.style.dimensions.width;
-        this.boundaries[0][1][1] = this.style.position.y;
+        this.boundaries[0][1][0] = this.state.position.x + this.state.dimensions.width;
+        this.boundaries[0][1][1] = this.state.position.y;
 
-        this.boundaries[1][0][0] = this.style.position.x;
-        this.boundaries[1][0][1] = this.style.position.y + this.style.dimensions.height;
+        this.boundaries[1][0][0] = this.state.position.x;
+        this.boundaries[1][0][1] = this.state.position.y + this.state.dimensions.height;
 
-        this.boundaries[1][1][0] = this.style.position.x + this.style.dimensions.width;
-        this.boundaries[1][1][1] = this.style.position.y + this.style.dimensions.height;
+        this.boundaries[1][1][0] = this.state.position.x + this.state.dimensions.width;
+        this.boundaries[1][1][1] = this.state.position.y + this.state.dimensions.height;
+
 
     }
     public updateGrid(gridX: number, gridY: number) {
-        this.style.position = gridToPosition(gridX, gridY);
-        this.style.grid.x = gridX;
-        this.style.grid.y = gridY;
+        this.state.position = gridToPosition(gridX, gridY);
+        this.state.grid.x = gridX;
+        this.state.grid.y = gridY;
 
         this.calculateBoundaries()
 
@@ -84,6 +85,34 @@ export default class Item{
         }
     }
     public getStyle = () =>{
-        return this.style;
+        return this.state;
+    }
+    public debug = {
+        cordinates: () => {
+            this.getBoundaries().forEach(each => {
+                each.forEach(boundary =>{
+                    this.ctx.fillText(`${boundary[0]},${boundary[1]}`, boundary[0], boundary[1]);
+                })
+
+            })
+
+        },
+        highlight: () => {
+            this.ctx.beginPath();
+
+            this.ctx.strokeStyle = 'red';
+            this.ctx.strokeRect(
+                this.state.position.x,
+                this.state.position.y,
+                this.state.dimensions.width,
+                this.state.dimensions.height,
+            );
+        },
+
+        all: () => {
+            this.debug.cordinates()
+            this.debug.highlight()
+
+        }
     }
 }

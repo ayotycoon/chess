@@ -1,3 +1,5 @@
+import {Direction} from "./types";
+
 export function gridToPosition(gridX: number, gridY: number) {
     return {x: gridX * 20, y: gridY * 20};
 }
@@ -17,8 +19,8 @@ export const windowUtils = {
 
 }
 
-const globalKeyboardEventEmitter = (type: string) => {
-    globalKeyboardEvent.cb(null,type)
+const globalKeyboardEventEmitter = (type: Direction) => {
+    globalKeyboardEvent.cb(null, type)
 
 }
 
@@ -27,3 +29,17 @@ export const globalKeyboardEvent = {
     emit: globalKeyboardEventEmitter
 }
 
+export const settings = {
+    debugging: true
+}
+/*
+export class Node<T>{
+    value: T
+    next: Node<T>
+    constructor(value: T, next : Node<T>) {
+        this.value = value;
+        this.next = next;
+
+    }
+}
+*/
