@@ -9,7 +9,7 @@ import {keyboardObs, stageObs} from "./misc/utils";
 function TimePill(props:any) {
     const min = Math.floor(props.time / 60);
     const seconds = props.time % 60;
-    return <div style={{background:'#ada69c', borderRadius:'5px',padding:'5px',display:'inline-block'}}>
+    return <div style={{background:'#ada69c', borderRadius:'5px',padding:'2.5px 5px',display:'inline-block',color:'#faf985',fontWeight:'bold',fontSize:'22px'}}>
         {min < 10 ? '0'+min: min}:{seconds < 10 ? '0'+seconds: seconds}
     </div>
 
@@ -46,11 +46,12 @@ function BottomPanel() {
 
     },[])
     return (
-        <div style={{position: 'absolute', bottom: 0, width: '100vw', background: 'white', zIndex: 10}} className={'p-2'}>
+        <div style={{position: 'absolute', bottom: '0px', width: '100vw', background: '#213c42', zIndex: 10}} className={'p-2'}>
+<div style={{textAlign:'right'}}>
+    <TimePill time={stageProps.time} />
+</div>
 
-            <TimePill time={stageProps.time} />
-            <br />
-            <br />
+<br />
             <div className={"row"}>
                 <div className={"col-6"}></div>
                 <div className={"col-6"}>

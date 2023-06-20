@@ -1,3 +1,6 @@
+html,body{
+    overflow: hidden;
+}
 .StolenIn60SecondsGame {
     text-align: center;
 
