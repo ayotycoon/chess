@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/games/static/css/main.e0b0e2ba.chunk.css",
-    "main.js": "/games/static/js/main.45112a9a.chunk.js",
-    "main.js.map": "/games/static/js/main.45112a9a.chunk.js.map",
-    "runtime-main.js": "/games/static/js/runtime-main.5acf9e3a.js",
-    "runtime-main.js.map": "/games/static/js/runtime-main.5acf9e3a.js.map",
-    "static/js/2.c50600c5.chunk.js": "/games/static/js/2.c50600c5.chunk.js",
-    "static/js/2.c50600c5.chunk.js.map": "/games/static/js/2.c50600c5.chunk.js.map",
-    "static/js/3.ba7c3143.chunk.js": "/games/static/js/3.ba7c3143.chunk.js",
-    "static/js/3.ba7c3143.chunk.js.map": "/games/static/js/3.ba7c3143.chunk.js.map",
+    "main.js": "/games/static/js/main.8c14d4b7.chunk.js",
+    "main.js.map": "/games/static/js/main.8c14d4b7.chunk.js.map",
+    "runtime-main.js": "/games/static/js/runtime-main.817c9e75.js",
+    "runtime-main.js.map": "/games/static/js/runtime-main.817c9e75.js.map",
+    "static/js/2.5639c579.chunk.js": "/games/static/js/2.5639c579.chunk.js",
+    "static/js/2.5639c579.chunk.js.map": "/games/static/js/2.5639c579.chunk.js.map",
+    "static/js/3.69db12f2.chunk.js": "/games/static/js/3.69db12f2.chunk.js",
+    "static/js/3.69db12f2.chunk.js.map": "/games/static/js/3.69db12f2.chunk.js.map",
     "index.html": "/games/index.html",
     "static/css/main.e0b0e2ba.chunk.css.map": "/games/static/css/main.e0b0e2ba.chunk.css.map",
-    "static/js/2.c50600c5.chunk.js.LICENSE.txt": "/games/static/js/2.c50600c5.chunk.js.LICENSE.txt",
+    "static/js/2.5639c579.chunk.js.LICENSE.txt": "/games/static/js/2.5639c579.chunk.js.LICENSE.txt",
     "static/media/StolenIn60Seconds.css": "/games/static/media/nokiafc22.04dc8b64.ttf"
   },
   "entrypoints": [
-    "static/js/runtime-main.5acf9e3a.js",
-    "static/js/2.c50600c5.chunk.js",
+    "static/js/runtime-main.817c9e75.js",
+    "static/js/2.5639c579.chunk.js",
     "static/css/main.e0b0e2ba.chunk.css",
-    "static/js/main.45112a9a.chunk.js"
+    "static/js/main.8c14d4b7.chunk.js"
   ]
 }
