@@ -8,13 +8,12 @@ class Wall extends Item {
         super(ctx, gridX, gridY, position, state);
         this.ctx = ctx;
         this.type = type;
-        this.state.noOfLines =  this.state.dimensions.height/10;
+        this.state.noOfLines =  this.state.dimensions.yAxis/10;
 
         if (type == 'H') {
-            const temp = this.state.dimensions.width;
-            this.state.dimensions.width = this.state.dimensions.height;
-            this.state.dimensions.height = temp;
-            this.calculateBoundaries();
+            const temp = this.state.dimensions.xAxis;
+            this.state.dimensions.xAxis = this.state.dimensions.yAxis;
+            this.state.dimensions.yAxis = temp;
         }
 
 
@@ -35,8 +34,8 @@ class Wall extends Item {
             this.ctx.strokeRect(
                 this.state.position.x,
                 this.state.position.y,
-                this.state.dimensions.width,
-                this.state.dimensions.height,
+                this.state.dimensions.xAxis,
+                this.state.dimensions.yAxis,
             );
 
             this.ctx.fill();
@@ -44,20 +43,20 @@ class Wall extends Item {
         },
         lines: () => {
             if (this.type === 'V' || this.type === 'B') {
-                const diff = this.state.dimensions.height / this.state.noOfLines;
+                const diff = this.state.dimensions.yAxis / this.state.noOfLines;
                 for (let i = 0; i < this.state.noOfLines; i++) {
-                    const _height = (this.state.dimensions.width / 2) + (i * diff);
+                    const _long = (this.state.dimensions.xAxis / 2) + (i * diff);
 
-                    const heightWithPosition = _height + this.state.position.y;
-                    const widthWithPosition = this.state.position.x + this.state.dimensions.width
+                    const longWithPosition = _long + this.state.position.y;
+                    const shortWithPosition = this.state.position.x + this.state.dimensions.xAxis
 
-                    if (_height > this.state.dimensions.height) {
+                    if (_long > this.state.dimensions.yAxis) {
 
                     }
                     this.ctx.beginPath();
                     this.ctx.strokeStyle = this.state.color;
                     this.ctx.moveTo(this.state.position.x, this.state.position.y + (i * diff));
-                    this.ctx.lineTo(widthWithPosition, heightWithPosition);
+                    this.ctx.lineTo(shortWithPosition, longWithPosition);
 
                     this.ctx.stroke();
                 }
@@ -66,20 +65,20 @@ class Wall extends Item {
 
 
             if (this.type == 'H') {
-                const diff = this.state.dimensions.width / this.state.noOfLines;
+                const diff = this.state.dimensions.xAxis / this.state.noOfLines;
                 for (let i = 0; i < this.state.noOfLines; i++) {
-                    const _width = (this.state.dimensions.height / 2) + (i * diff);
+                    const _short = (this.state.dimensions.yAxis / 2) + (i * diff);
 
-                    const widthWithPosition = _width + this.state.position.x;
-                    const heightWithPosition = this.state.position.y + this.state.dimensions.height
+                    const shortWithPosition = _short + this.state.position.x;
+                    const longWithPosition = this.state.position.y + this.state.dimensions.yAxis
 
-                    if (_width > this.state.dimensions.width) {
+                    if (_short > this.state.dimensions.xAxis) {
 
                     }
                     this.ctx.beginPath();
                     this.ctx.strokeStyle = this.state.color;
                     this.ctx.moveTo(this.state.position.x + (i * diff), this.state.position.y);
-                    this.ctx.lineTo(widthWithPosition, heightWithPosition);
+                    this.ctx.lineTo(shortWithPosition, longWithPosition);
 
                     this.ctx.stroke();
                 }

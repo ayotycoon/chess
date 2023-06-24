@@ -14,8 +14,8 @@ export function getDefaultState() {
 
         },
         dimensions: {
-            width: 20,
-            height: 120
+            xAxis: 20,
+            yAxis: 120
         },
         color: 'black',
         noOfLines: 10,
@@ -25,10 +25,7 @@ export function getDefaultState() {
 export default class Item {
     protected ctx: CanvasRenderingContext2D;
     protected state: ItemState = getDefaultState()
-    protected boundaries = [
-        [[0, 0], [0, 0]],
-        [[0, 0], [0, 0]],
-    ]
+
 
     constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, style?: any) {
         this.ctx = ctx;
@@ -48,12 +45,8 @@ export default class Item {
         if (style) {
             this.state = {...this.state, ...style};
         }
-        this.calculateBoundaries()
     }
 
-    public getBoundaries() {
-        return this.boundaries;
-    }
 
     public isWithinBoundary(grid: number[][]) {
 
@@ -61,20 +54,24 @@ export default class Item {
 
     }
 
-    public calculateBoundaries() {
-        this.boundaries[0][0][0] = this.state.position.x;
-        this.boundaries[0][0][1] = this.state.position.y;
+    public getBoundaries() {
+        const boundaries = [
+            [[0, 0], [0, 0]],
+            [[0, 0], [0, 0]],
+        ]
+        boundaries[0][0][0] = this.state.position.x;
+        boundaries[0][0][1] = this.state.position.y;
 
-        this.boundaries[0][1][0] = this.state.position.x + this.state.dimensions.width;
-        this.boundaries[0][1][1] = this.state.position.y;
+        boundaries[0][1][0] = this.state.position.x + this.state.dimensions.xAxis;
+        boundaries[0][1][1] = this.state.position.y;
 
-        this.boundaries[1][0][0] = this.state.position.x;
-        this.boundaries[1][0][1] = this.state.position.y + this.state.dimensions.height;
+        boundaries[1][0][0] = this.state.position.x;
+        boundaries[1][0][1] = this.state.position.y + this.state.dimensions.yAxis;
 
-        this.boundaries[1][1][0] = this.state.position.x + this.state.dimensions.width;
-        this.boundaries[1][1][1] = this.state.position.y + this.state.dimensions.height;
+        boundaries[1][1][0] = this.state.position.x + this.state.dimensions.xAxis;
+        boundaries[1][1][1] = this.state.position.y + this.state.dimensions.yAxis;
 
-
+        return boundaries;
     }
 
     public updateGrid(gridX: number, gridY: number) {
@@ -82,7 +79,6 @@ export default class Item {
         this.state.grid.x = gridX;
         this.state.grid.y = gridY;
 
-        this.calculateBoundaries()
 
     }
 
@@ -111,14 +107,15 @@ export default class Item {
             this.ctx.strokeRect(
                 this.state.position.x,
                 this.state.position.y,
-                this.state.dimensions.width,
-                this.state.dimensions.height,
+                this.state.dimensions.xAxis,
+                this.state.dimensions.yAxis,
             );
         },
 
         all: () => {
             this.debug.cordinates()
             this.debug.highlight()
+            console.log('el', this)
 
         }
     }

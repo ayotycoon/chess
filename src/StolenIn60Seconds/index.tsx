@@ -9,8 +9,6 @@ import {Direction} from "./misc/types";
 
 function StolenIn60SecondsGame() {
     const {stageProps} = useContext(StateContext);
-    console.log(stageProps)
-
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const canvasContainerRef = useRef<HTMLDivElement>(null)
 

@@ -21,7 +21,7 @@ import Item from "./Item";
     draw = {
         image:() => {
             this.imgPromise?.then(() => {
-                this.ctx.drawImage(this.img, this.state.position.x, this.state.position.y, this.state.dimensions.width, this.state.dimensions.height);
+                this.ctx.drawImage(this.img, this.state.position.x, this.state.position.y, this.state.dimensions.xAxis, this.state.dimensions.yAxis);
 
             })
         },
@@ -34,12 +34,12 @@ import Item from "./Item";
 
 export  class Flower extends ImageItem {
     constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position,{dimensions: {height: 80, width: 80}, noOfLines: 2},process.env.PUBLIC_URL + '/assets/flower.png');
+        super(ctx, gridX, gridY, position,{dimensions: {yAxis: 80, xAxis: 80}, noOfLines: 2},process.env.PUBLIC_URL + '/assets/flower.png');
     }
 }
 
 export  class HCar extends ImageItem {
     constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position,{dimensions: {height: 40, width: 80}, noOfLines: 2},process.env.PUBLIC_URL + '/assets/hcar.png');
+        super(ctx, gridX, gridY, position,{dimensions: {yAxis: 40, xAxis: 80}, noOfLines: 2},process.env.PUBLIC_URL + '/assets/hcar.png');
     }
 }

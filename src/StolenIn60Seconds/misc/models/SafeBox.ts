@@ -1,8 +1,7 @@
 import {Position, WallType} from "../types";
 import Item, {getDefaultState, StateActionItem} from "./Item";
 import {node} from "../modules/linkedlist";
-
-export class Gate extends StateActionItem<{
+export class SafeBox extends StateActionItem<{
     opened: boolean;
 }> {
     private readonly type: WallType;
@@ -38,8 +37,8 @@ export class Gate extends StateActionItem<{
             this.ctx.beginPath();
 
             this.ctx.strokeStyle = this.state.color;
-            const x = this.state.position.x + (this.type == 'V' ? 5 : 0)
-            const y = this.state.position.y + (this.type == 'H' ? 5 : 0)
+            const x = this.state.position.x
+            const y = this.state.position.y
             this.ctx.strokeRect(
                 x,
                 y,
@@ -101,18 +100,3 @@ export class Gate extends StateActionItem<{
     }
 
 }
-
-export class HGate extends Gate {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, 'H', {dimensions: {xAxis: 20, yAxis: 80}})
-    }
-
-}
-
-export class VGate extends Gate {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, 'V', {dimensions: {xAxis: 20, yAxis: 80}})
-    }
-
-}
-

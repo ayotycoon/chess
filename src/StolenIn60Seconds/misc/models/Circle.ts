@@ -10,7 +10,7 @@ export default class Circle extends StateActionItem<{
 
 
     constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, {dimensions: {height: 10, width: 10}})
+        super(ctx, gridX, gridY, position, {dimensions: {yAxis: 10, xAxis: 10}})
         this.stateActionHistory.add(node({x: this.state.position.x, y: this.state.position.y,second:0}))
 
     }
@@ -76,7 +76,7 @@ export default class Circle extends StateActionItem<{
             this.ctx.arc(
                 this.state.position.x,
                 this.state.position.y,
-                (this.state.dimensions.width) / 2,
+                (this.state.dimensions.xAxis) / 2,
                 0,
                 Math.PI * 2,
                 false

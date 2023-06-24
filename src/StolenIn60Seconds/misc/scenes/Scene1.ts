@@ -7,6 +7,7 @@ import {Gate, HGate, VGate} from "../models/Gate";
 import {Direction} from "../types";
 import {Hammer, SmallBomb} from "../models/Tool";
 import {getStageProps} from "../../../misc/StateProvider";
+import {SafeBox} from "../models/SafeBox";
 
 const MOVEMENT_SPEED = 3;
 
@@ -65,42 +66,51 @@ export default class Scene1 {
 
                 [new HWall(this.ctx, this.pos.x, this.pos.y + (0.0 * 5), undefined, {
                     dimensions: {
-                        height: 120,
-                        width: 20
+                        yAxis: 120,
+                        xAxis: 20
                     }
                 }), new HGate(this.ctx, this.pos.x + (1.2 * 5), this.pos.y + (0 * 5)),
                     new HWall(this.ctx, this.pos.x + (2.0 * 5), this.pos.y + (0 * 5), undefined, {
                     dimensions: {
-                        height: 540,
-                        width: 20
+                        yAxis: 540,
+                        xAxis: 20
                     },
 
                 })],
 
                 [new VWall(this.ctx, this.pos.x, this.pos.y + (0.2 * 5), undefined, {
                     dimensions: {
-                        width: 20,
-                        height: 340
+                        xAxis: 20,
+                        yAxis: 340
                     },
 
-                }), new VWall(this.ctx, this.pos.x + (7.2 * 5), this.pos.y + (0.2 * 5), undefined, {
+                }),
+                    new SafeBox(this.ctx, this.pos.x  + (0.2 * 5), this.pos.y + (0.8 * 5), undefined,'V', {
+                        dimensions: {
+                            xAxis: 20,
+                            yAxis: 40
+                        },
+
+                    })
+
+                    , new VWall(this.ctx, this.pos.x + (7.2 * 5), this.pos.y + (0.2 * 5), undefined, {
                     dimensions: {
-                        width: 20,
-                        height: 760
+                        xAxis: 20,
+                        yAxis: 760
                     }
                 })],
                 [new VGate(this.ctx, this.pos.x, this.pos.y + (3.6 * 5))],
                 [new VWall(this.ctx, this.pos.x, this.pos.y + (4.4 * 5), undefined, {
                     dimensions: {
-                        height: 340,
-                        width: 20
+                        yAxis: 340,
+                        xAxis: 20
                     }
                 })],
 
                 [new HWall(this.ctx, this.pos.x + (0.0 * 5), this.pos.y + (7.8 * 5), undefined, {
                     dimensions: {
-                        height: 740,
-                        width: 20
+                        yAxis: 740,
+                        xAxis: 20
                     }
                 }),],
 

@@ -25,7 +25,7 @@ export interface PromptData<T,X>{
 export interface ItemState {
     position: { x: number, y: number },
     grid: { x: number, y: number },
-    dimensions: { width: number, height: number },
+    dimensions: { xAxis: number, yAxis: number },
     color: string,
     noOfLines: number
     action?: {
