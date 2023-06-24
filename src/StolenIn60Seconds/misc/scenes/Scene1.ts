@@ -7,7 +7,7 @@ import {Gate, HGate, VGate} from "../models/Gate";
 import {Direction} from "../types";
 import {Hammer, SmallBomb} from "../models/Tool";
 import {getStageProps} from "../../../misc/StateProvider";
-import {SafeBox} from "../models/SafeBox";
+import {HSafeBox, MediumSafeBox, SafeBox, VSafeBox} from "../models/SafeBox";
 
 const MOVEMENT_SPEED = 3;
 
@@ -64,50 +64,45 @@ export default class Scene1 {
                 [this.player],
                 [car],
 
-                [new HWall(this.ctx, this.pos.x, this.pos.y + (0.0 * 5), undefined, {
+                [new HWall(this.ctx, this.pos.x, this.pos.y + (0.0 * 5), {
                     dimensions: {
                         yAxis: 120,
                         xAxis: 20
                     }
                 }), new HGate(this.ctx, this.pos.x + (1.2 * 5), this.pos.y + (0 * 5)),
-                    new HWall(this.ctx, this.pos.x + (2.0 * 5), this.pos.y + (0 * 5), undefined, {
-                    dimensions: {
-                        yAxis: 540,
-                        xAxis: 20
-                    },
+                    new HWall(this.ctx, this.pos.x + (2.0 * 5), this.pos.y + (0 * 5), {
+                        dimensions: {
+                            yAxis: 540,
+                            xAxis: 20
+                        },
 
-                })],
+                    })],
 
-                [new VWall(this.ctx, this.pos.x, this.pos.y + (0.2 * 5), undefined, {
+                [new VWall(this.ctx, this.pos.x, this.pos.y + (0.2 * 5), {
                     dimensions: {
                         xAxis: 20,
                         yAxis: 340
                     },
 
                 }),
-                    new SafeBox(this.ctx, this.pos.x  + (0.2 * 5), this.pos.y + (0.8 * 5), undefined,'V', {
-                        dimensions: {
-                            xAxis: 20,
-                            yAxis: 40
-                        },
-
-                    })
-
-                    , new VWall(this.ctx, this.pos.x + (7.2 * 5), this.pos.y + (0.2 * 5), undefined, {
+                    new HSafeBox(this.ctx, this.pos.x + (2.6 * 5), this.pos.y + (0.2 * 5)),
+                    new VSafeBox(this.ctx, this.pos.x + (0.2 * 5), this.pos.y + (0.8 * 5)),
+                    new MediumSafeBox(this.ctx, this.pos.x + (0.2 * 5), this.pos.y + (1.9 * 5)),
+                    new VWall(this.ctx, this.pos.x + (7.2 * 5), this.pos.y + (0.2 * 5), {
                     dimensions: {
                         xAxis: 20,
                         yAxis: 760
                     }
                 })],
                 [new VGate(this.ctx, this.pos.x, this.pos.y + (3.6 * 5))],
-                [new VWall(this.ctx, this.pos.x, this.pos.y + (4.4 * 5), undefined, {
+                [new VWall(this.ctx, this.pos.x, this.pos.y + (4.4 * 5), {
                     dimensions: {
                         yAxis: 340,
                         xAxis: 20
                     }
                 })],
 
-                [new HWall(this.ctx, this.pos.x + (0.0 * 5), this.pos.y + (7.8 * 5), undefined, {
+                [new HWall(this.ctx, this.pos.x + (0.0 * 5), this.pos.y + (7.8 * 5), {
                     dimensions: {
                         yAxis: 740,
                         xAxis: 20
@@ -152,19 +147,20 @@ export default class Scene1 {
         const increments = [1, 2, 3, 4, 5, 6].map((i,) => ((isVertical ? move.prevPosition.y : move.prevPosition.x) + (((direction == Direction.up || direction === Direction.left) ? -i : i) * 10)));
 
         const playerPosition = this.player.getState().position;
+        for (let pos of increments) {
+            for (let row of this.scene) {
+                for (let el of row) {
+                    if (!el || el instanceof Circle || el instanceof HCar) continue;
+                    const boundary = el.getBoundaries();
 
-        for (let row of this.scene) {
-            for (let el of row) {
-                if (!el || el instanceof Circle || el instanceof HCar) continue;
-                const boundary = el.getBoundaries();
-                for (let pos of increments) {
                     if (
-                        (isHorizontal ? pos : playerPosition.x) >= boundary[0][0][0]
-                        && (isHorizontal ? pos : playerPosition.x) <= boundary[0][1][0]
-                        && (isVertical ? pos : playerPosition.y) >= boundary[0][0][1]
-                        && (isVertical ? pos : playerPosition.y) <= boundary[1][0][1]
+                        (isHorizontal ? pos : playerPosition.x) > boundary[0][0][0]
+                        && (isHorizontal ? pos : playerPosition.x) < boundary[0][1][0]
+                        && (isVertical ? pos : playerPosition.y) > boundary[0][0][1]
+                        && (isVertical ? pos : playerPosition.y) < boundary[1][0][1]
 
                     ) {
+                        // check proximity
 
                         return await this.itemInteraction(el)
                     }
@@ -183,11 +179,15 @@ export default class Scene1 {
             /**
              * Check if item hit is interactable
              */
-            const isStateActionItem = el instanceof StateActionItem;
             el.debug.all()
-            if (!isStateActionItem) return resolve(0);
-            if (el instanceof Gate) {
-                if (el.getState().action?.opened) return resolve(1);
+            if (!(el instanceof StateActionItem)) return resolve(0);
+            const isGate = el instanceof Gate;
+            const isSafeBox = el instanceof SafeBox;
+
+                if (  el.getState().action?.opened) {
+                    if (isGate )return resolve(1);
+                    if(isSafeBox) return resolve(0)
+                }
 
                 stageObs.emit({
                     toolsPrompt: {
@@ -206,8 +206,8 @@ export default class Scene1 {
                     }
                 })
 
+                return;
 
-            }
 
         })
     }
@@ -246,53 +246,53 @@ export default class Scene1 {
 
 
         return async (e: KeyboardEvent, direction?: Direction) => {
-        e = e || window.event;
-        if ((e && e.keyCode == 90 && e.ctrlKey) || direction === Direction.undo) return this.undo()
-        let valid = false;
-        let move: { prevPosition: { x: number, y: number }, reject: () => void, accept: () => void } = null as any;
+            e = e || window.event;
+            if ((e && e.keyCode == 90 && e.ctrlKey) || direction === Direction.undo) return this.undo()
+            let valid = false;
+            let move: { prevPosition: { x: number, y: number }, reject: () => void, accept: () => void } = null as any;
 
-        if (e.keyCode == 38 || direction === Direction.up) {
-            direction = Direction.up
-            valid = true;
-            // up arrow
-            if(!getStageProps().screenGrabbed)
-            move = this.player.action.up(MOVEMENT_SPEED);
+            if (e.keyCode == 38 || direction === Direction.up) {
+                direction = Direction.up
+                valid = true;
+                // up arrow
+                if (!getStageProps().screenGrabbed)
+                    move = this.player.action.up(MOVEMENT_SPEED);
 
-        } else if (e.keyCode == 40 || direction === Direction.down) {
-            direction = Direction.down
-            valid = true;
-            // down arrow
-            if(!getStageProps().screenGrabbed)
-            move = this.player.action.down(MOVEMENT_SPEED);
+            } else if (e.keyCode == 40 || direction === Direction.down) {
+                direction = Direction.down
+                valid = true;
+                // down arrow
+                if (!getStageProps().screenGrabbed)
+                    move = this.player.action.down(MOVEMENT_SPEED);
 
-        } else if (e.keyCode == 37 || direction === Direction.left) {
-            direction = Direction.left
-            valid = true;
-            // left arrow
-            if(!getStageProps().screenGrabbed)
-            move = this.player.action.left(MOVEMENT_SPEED);
-        } else if (e.keyCode == 39 || direction === Direction.right) {
-            direction = Direction.right
-            valid = true;
-            // right arrow
-            if(!getStageProps().screenGrabbed)
-            move = this.player.action.right(MOVEMENT_SPEED);
+            } else if (e.keyCode == 37 || direction === Direction.left) {
+                direction = Direction.left
+                valid = true;
+                // left arrow
+                if (!getStageProps().screenGrabbed)
+                    move = this.player.action.left(MOVEMENT_SPEED);
+            } else if (e.keyCode == 39 || direction === Direction.right) {
+                direction = Direction.right
+                valid = true;
+                // right arrow
+                if (!getStageProps().screenGrabbed)
+                    move = this.player.action.right(MOVEMENT_SPEED);
 
-        }
-
-        if (valid && direction != undefined) {
-            if(getStageProps().screenGrabbed) return _moveFrame(direction, true);
-            const elapsed = await this.validateMove(direction, move);
-            if (elapsed === 0) return move.reject();
-            if (elapsed != 1) {
-                move.reject()
-            } else {
-                _moveFrame(direction)
             }
-            this.currentSecond += elapsed;
-            this.player.timeElapsedAction(this.currentSecond)
-            this.render()
-        }
+
+            if (valid && direction != undefined) {
+                if (getStageProps().screenGrabbed) return _moveFrame(direction, true);
+                const elapsed = await this.validateMove(direction, move);
+                if (elapsed === 0) return move.reject();
+                if (elapsed != 1) {
+                    move.reject()
+                } else {
+                    _moveFrame(direction)
+                }
+                this.currentSecond += elapsed;
+                this.player.timeElapsedAction(this.currentSecond)
+                this.render()
+            }
         }
 
     };

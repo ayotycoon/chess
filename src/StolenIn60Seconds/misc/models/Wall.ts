@@ -1,11 +1,11 @@
-import {Position} from "../types";
+import {ItemState, Position} from "../types";
 import Item, {getDefaultState} from "./Item";
 
 class Wall extends Item {
     private readonly type: string;
 
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, type = 'V', state?: any) {
-        super(ctx, gridX, gridY, position, state);
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0,  type = 'V', state?: Partial<ItemState>) {
+        super(ctx, gridX, gridY,  state);
         this.ctx = ctx;
         this.type = type;
         this.state.noOfLines =  this.state.dimensions.yAxis/10;
@@ -96,15 +96,15 @@ class Wall extends Item {
 }
 
 export class HWall extends Wall {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, style?: any) {
-        super(ctx, gridX, gridY, position, 'H', style)
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0,  style?: Partial<ItemState>) {
+        super(ctx, gridX, gridY, 'H', style)
     }
 
 }
 
 export class VWall extends Wall {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, style?: any) {
-        super(ctx, gridX, gridY, position, 'V', style)
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0,  style?: Partial<ItemState>) {
+        super(ctx, gridX, gridY, 'V', style)
     }
 
 }

@@ -9,8 +9,8 @@ export default class Circle extends StateActionItem<{
 }> {
 
 
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, {dimensions: {yAxis: 10, xAxis: 10}})
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0) {
+        super(ctx, gridX, gridY, {dimensions: {yAxis: 10, xAxis: 10}})
         this.stateActionHistory.add(node({x: this.state.position.x, y: this.state.position.y,second:0}))
 
     }

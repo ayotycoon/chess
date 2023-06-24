@@ -27,6 +27,7 @@ export interface ItemState {
     grid: { x: number, y: number },
     dimensions: { xAxis: number, yAxis: number },
     color: string,
+    src?: string,
     noOfLines: number
     action?: {
         opened?: boolean

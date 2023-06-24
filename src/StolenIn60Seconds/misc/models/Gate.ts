@@ -1,4 +1,4 @@
-import {Position, WallType} from "../types";
+import {ItemState, Position, WallType} from "../types";
 import Item, {getDefaultState, StateActionItem} from "./Item";
 import {node} from "../modules/linkedlist";
 
@@ -7,8 +7,8 @@ export class Gate extends StateActionItem<{
 }> {
     private readonly type: WallType;
 
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, type: WallType = 'V', style?: any) {
-        super(ctx, gridX, gridY, position, style);
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, type: WallType = 'V', style?: Partial<ItemState>) {
+        super(ctx, gridX, gridY, style);
 
         this.stateActionHistory.add(node({opened: false, second: 0}))
         this.state.color = 'black';
@@ -103,15 +103,15 @@ export class Gate extends StateActionItem<{
 }
 
 export class HGate extends Gate {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, 'H', {dimensions: {xAxis: 20, yAxis: 80}})
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0) {
+        super(ctx, gridX, gridY, 'H', {dimensions: {xAxis: 20, yAxis: 80}})
     }
 
 }
 
 export class VGate extends Gate {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position, 'V', {dimensions: {xAxis: 20, yAxis: 80}})
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0) {
+        super(ctx, gridX, gridY, 'V', {dimensions: {xAxis: 20, yAxis: 80}})
     }
 
 }

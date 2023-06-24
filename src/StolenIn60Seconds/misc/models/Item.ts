@@ -27,33 +27,18 @@ export default class Item {
     protected state: ItemState = getDefaultState()
 
 
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, style?: any) {
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, style?: Partial<ItemState>) {
         this.ctx = ctx;
 
-        if (position) {
-            this.state.position = position;
-            this.state.grid = positionToGrid(position.x, position.y)
-        } else {
-            this.state.position = gridToPosition(gridX, gridY);
-            this.state.grid = {
-                x: gridX,
-                y: gridY
-            }
-        }
 
         // @ ts-ignore
         if (style) {
             this.state = {...this.state, ...style};
         }
-    }
-
-
-    public isWithinBoundary(grid: number[][]) {
-
-        return false;
+        if(gridX != undefined && gridY != undefined)this.state.position = gridToPosition(gridX, gridY);
+        this.state.grid = positionToGrid(this.state.position.x, this.state.position.y)
 
     }
-
     public getBoundaries() {
         const boundaries = [
             [[0, 0], [0, 0]],
@@ -133,8 +118,8 @@ export class StateActionItem<T> extends Item {
     protected stateActionHistory = LinkedList<T & { second: number }>();
 
 
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, style?: any) {
-        super(ctx, gridX, gridY, position, style)
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, style?: Partial<ItemState>) {
+        super(ctx, gridX, gridY, style)
 
     }
 
@@ -148,8 +133,6 @@ export class StateActionItem<T> extends Item {
     protected _resetToTime = (second: number) => {
         let x = this.stateActionHistory.head();
         let resetNode: typeof x;
-
-
         while (x) {
             if (x.val.second > second) {
                 if (x.prev) {

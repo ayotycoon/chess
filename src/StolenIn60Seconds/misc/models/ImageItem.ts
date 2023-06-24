@@ -1,4 +1,4 @@
-import {Position} from "../types";
+import {ItemState, Position} from "../types";
 import Item from "./Item";
 
 
@@ -6,8 +6,8 @@ import Item from "./Item";
     private img = new Image();
     private imgPromise:Promise<boolean> | null= null
 
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, style?:any,src:string = '') {
-        super(ctx, gridX, gridY, position, style);
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0,style?:Partial<ItemState>,src:string = '') {
+        super(ctx, gridX, gridY, style);
 
         this.img.src = src;
         this.imgPromise = new Promise((resolve,reject) =>{
@@ -33,13 +33,13 @@ import Item from "./Item";
 }
 
 export  class Flower extends ImageItem {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position,{dimensions: {yAxis: 80, xAxis: 80}, noOfLines: 2},process.env.PUBLIC_URL + '/assets/flower.png');
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0) {
+        super(ctx, gridX, gridY,{dimensions: {yAxis: 80, xAxis: 80}, noOfLines: 2},process.env.PUBLIC_URL + '/assets/flower.png');
     }
 }
 
 export  class HCar extends ImageItem {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
-        super(ctx, gridX, gridY, position,{dimensions: {yAxis: 40, xAxis: 80}, noOfLines: 2},process.env.PUBLIC_URL + '/assets/hcar.png');
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0) {
+        super(ctx, gridX, gridY,{dimensions: {yAxis: 40, xAxis: 80}, noOfLines: 2},process.env.PUBLIC_URL + '/assets/hcar.png');
     }
 }
