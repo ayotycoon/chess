@@ -3,20 +3,27 @@ import Item from "./Item";
 
 
  class ImageItem extends Item{
-    private img = new Image()
+    private img = new Image();
+    private imgPromise:Promise<boolean> | null= null
 
     constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, style?:any,src:string = '') {
         super(ctx, gridX, gridY, position, style);
 
         this.img.src = src;
-        this.img.onload = () => {
-            this.draw.all();
-        }
+        this.imgPromise = new Promise((resolve,reject) =>{
+            this.img.onload = () => {
+                resolve(true)
+            }
+        })
+
     }
 
     draw = {
         image:() => {
-            this.ctx.drawImage(this.img,this.state.position.x, this.state.position.y, this.state.dimensions.width,this.state.dimensions.height);
+            this.imgPromise?.then(() => {
+                this.ctx.drawImage(this.img, this.state.position.x, this.state.position.y, this.state.dimensions.width, this.state.dimensions.height);
+
+            })
         },
         all: () => {
             this.draw.image()

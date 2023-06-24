@@ -1,19 +1,26 @@
-import Item from "./Item";
+import Item, {StateActionItem} from "./Item";
 import {Position} from "../types";
-import {stageObs} from "../utils";
+import {positionToGrid, stageObs} from "../utils";
+import {node} from "../modules/linkedlist";
 
-export default class Circle extends Item {
-    private movementHistory: {x:number;y:number}[] = [];
+export default class Circle extends StateActionItem<{
+    x:number;
+    y:number;
+}> {
+
+
     constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined) {
         super(ctx, gridX, gridY, position, {dimensions: {height: 10, width: 10}})
-        this.movementHistory.push({x:this.state.position.x,y:this.state.position.y})
-        this.draw.all()
+        this.stateActionHistory.add(node({x: this.state.position.x, y: this.state.position.y,second:0}))
+
     }
 
     action = {
         goTo: (gridX: number, gridY: number) => {
-            const prevGrid = {...this.state.grid};
-            const previousPosition = {...this.state.position};
+
+            const previousPosition = {...this.getPreviousPosition()};
+
+            const prevGrid = positionToGrid(previousPosition.x,previousPosition.y);
 
             const res = {
                 prevPosition: previousPosition,
@@ -22,9 +29,7 @@ export default class Circle extends Item {
                     this.draw.all();
                 },
                 accept: () => {
-                    this.movementHistory.push({...this.state.position})
-                    stageObs.emit({time:this.movementHistory.length-1})
-                    this.draw.all();
+
                 }
 
             }
@@ -33,23 +38,28 @@ export default class Circle extends Item {
 
         },
         down: (n = 1) => {
-            return this.action.goTo(this.state.grid.x, this.state.grid.y + n)
+            const {x,y} = this.getPreviousGrid();
+            return this.action.goTo(x, y + n)
         },
         up: (n = 1) => {
-            return this.action.goTo(this.state.grid.x, this.state.grid.y - n)
+            const {x,y} = this.getPreviousGrid();
+            return this.action.goTo(x, y - n)
         },
         right: (n = 1) => {
-            return this.action.goTo(this.state.grid.x + n, this.state.grid.y)
+            const {x,y} = this.getPreviousGrid();
+            return this.action.goTo(x + n, y)
         },
         left: (n = 1) => {
-            return this.action.goTo(this.state.grid.x - n, this.state.grid.y)
+            const {x,y} = this.getPreviousGrid();
+            return this.action.goTo(x - n, y)
         }
     }
     public draw = {
         history: () => {
-            this.movementHistory.forEach((curr, i) => {
-                if(i == 0) return;
-                const prev = this.movementHistory[i-1];
+            const arr = this.stateActionHistory.values();
+            arr.forEach((curr, i) => {
+                if (i == 0) return;
+                const prev = arr[i - 1];
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = this.state.color;
                 this.ctx.strokeRect(
@@ -81,4 +91,38 @@ export default class Circle extends Item {
         }
     }
 
+    public getPlayerMoves() {
+        return this.stateActionHistory.tail()?.val.second || 0
+
+    }
+
+    timeElapsedAction = (currentSecond:number)=> {
+        this.stateActionHistory.add(node({x:this.state.position.x,y:this.state.position.y,second: currentSecond}))
+    }
+
+    resetToTime = (second:number)=> {
+        let resetNode: any = this._resetToTime(second);
+        if(!resetNode) return false;
+
+        this.state.position.x = resetNode.val.x
+        this.state.position.y = resetNode.val.y
+
+        this.state.grid = positionToGrid(resetNode.val.x,resetNode.val.y)
+
+        return true;
+
+    }
+
+    private getPreviousPosition() {
+        return this.stateActionHistory.tail()?.val
+    }
+    private getPreviousGrid() {
+        const {x,y} = this.stateActionHistory.tail()?.val;
+        return positionToGrid(x,y)
+    }
+
+    getLastActionSecond() {
+        const tail = this.stateActionHistory.tail();
+        return (tail?.val.second || 0) - ( tail?.prev?.val.second || 0)
+    }
 }

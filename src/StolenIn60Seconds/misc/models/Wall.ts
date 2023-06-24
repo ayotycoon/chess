@@ -1,11 +1,11 @@
 import {Position} from "../types";
-import Item from "./Item";
+import Item, {getDefaultState} from "./Item";
 
-class Wall extends Item{
-    private readonly type:string;
+class Wall extends Item {
+    private readonly type: string;
 
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, type = 'V',state?: any) {
-        super(ctx,gridX,gridY,position, state);
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, type = 'V', state?: any) {
+        super(ctx, gridX, gridY, position, state);
         this.ctx = ctx;
         this.type = type;
         this.state.noOfLines =  this.state.dimensions.height/10;
@@ -17,17 +17,18 @@ class Wall extends Item{
             this.calculateBoundaries();
         }
 
-        this.draw.all();
-
 
     }
+
     public updateGrid(gridX: number, gridY: number) {
-        this.updateGrid(gridX,gridY);
-        this.draw.all();
+        this.updateGrid(gridX, gridY);
+
 
     }
+
     public draw = {
         rect: () => {
+            this.ctx.lineWidth = 2
             this.ctx.beginPath();
 
             this.ctx.strokeStyle = this.state.color;
@@ -64,7 +65,7 @@ class Wall extends Item{
             }
 
 
-            if(this.type == 'H'){
+            if (this.type == 'H') {
                 const diff = this.state.dimensions.width / this.state.noOfLines;
                 for (let i = 0; i < this.state.noOfLines; i++) {
                     const _width = (this.state.dimensions.height / 2) + (i * diff);
@@ -96,14 +97,15 @@ class Wall extends Item{
 }
 
 export class HWall extends Wall {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined,style?:any) {
-        super(ctx, gridX, gridY, position, 'H',style)
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, style?: any) {
+        super(ctx, gridX, gridY, position, 'H', style)
     }
 
 }
+
 export class VWall extends Wall {
-    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined,style?:any) {
-        super(ctx, gridX, gridY, position, 'V',style)
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, style?: any) {
+        super(ctx, gridX, gridY, position, 'V', style)
     }
 
 }

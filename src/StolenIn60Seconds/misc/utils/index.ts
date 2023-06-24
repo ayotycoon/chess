@@ -1,6 +1,7 @@
-import {Direction} from "../types";
+import {Direction, PromptData} from "../types";
 import Subscription from "./Subscription";
 import Circle from "../models/Circle";
+import {Tool} from "../models/Tool";
 
 export function gridToPosition(gridX: number, gridY: number) {
     return {x: gridX * 20, y: gridY * 20};
@@ -24,8 +25,16 @@ export function moveFrame(frameX: number, frameY: number, canvasContainer: HTMLD
         frameY,
     }
 
-    return (direction: Direction) => {
+    return (direction: Direction, screenGrabbed = false) => {
+
         const movemtntPixel = 60;
+        if(screenGrabbed){
+            if(direction == Direction.up) canvasContainer.scrollTop-=movemtntPixel;
+            else if(direction == Direction.down) canvasContainer.scrollTop+=movemtntPixel;
+            else if(direction == Direction.right) canvasContainer.scrollLeft+=movemtntPixel;
+            else if(direction == Direction.left) canvasContainer.scrollLeft-=movemtntPixel;
+            return;
+        }
         if (direction == Direction.up) pos.frameY -= movemtntPixel
         else if (direction == Direction.down) pos.frameY += movemtntPixel
         else if (direction == Direction.right) pos.frameX += movemtntPixel
@@ -35,10 +44,11 @@ export function moveFrame(frameX: number, frameY: number, canvasContainer: HTMLD
         let distHeight = canvasContainer.clientHeight / 2;
 
         let previousInStack: any = null;
-        if(direction === Direction.up && stack.vertical.length) previousInStack = stack.vertical[stack.vertical.length-1];
-        if(direction === Direction.left && stack.horizontal.length) previousInStack = stack.horizontal[stack.horizontal.length-1];
+        if (direction === Direction.up && stack.vertical.length) previousInStack = stack.vertical[stack.vertical.length - 1];
+        if (direction === Direction.left && stack.horizontal.length) previousInStack = stack.horizontal[stack.horizontal.length - 1];
 
         if (direction == Direction.down && pos.frameY >= distHeight) {
+
             stack.vertical.push({
                 frame: pos.frameY,
                 scroll: canvasContainer.scrollTop
@@ -53,10 +63,10 @@ export function moveFrame(frameX: number, frameY: number, canvasContainer: HTMLD
 
         }
 
-        if(direction == Direction.up){
-            if(!previousInStack)return;
+        if (direction == Direction.up) {
+            if (!previousInStack) return;
             console.log(previousInStack)
-            if(pos.frameY <= previousInStack.frame ){
+            if (pos.frameY <= previousInStack.frame) {
                 stack.vertical.pop();
                 canvasContainer.scrollTop = previousInStack.scroll;
                 pos.frameY = previousInStack.frame;
@@ -80,10 +90,9 @@ export function moveFrame(frameX: number, frameY: number, canvasContainer: HTMLD
         }
 
 
-        if(direction == Direction.left){
-            if(!previousInStack)return;
-            console.log(previousInStack)
-            if(pos.frameX <= previousInStack.frame ){
+        if (direction == Direction.left) {
+            if (!previousInStack) return;
+            if (pos.frameX <= previousInStack.frame) {
                 stack.horizontal.pop();
                 canvasContainer.scrollLeft = previousInStack.scroll;
                 pos.frameX = previousInStack.frame;
@@ -96,4 +105,11 @@ export function moveFrame(frameX: number, frameY: number, canvasContainer: HTMLD
 
 
 export const keyboardObs = new Subscription()
-export const stageObs = new Subscription<{ time?: number }>();
+
+interface StageProps {
+    time?: number;
+    toolsPrompt?: PromptData<Tool[], Tool>
+}
+
+export const stageObs = new Subscription<StageProps>();
+

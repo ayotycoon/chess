@@ -1,10 +1,9 @@
 import {gridToPosition, positionToGrid} from "../utils";
-import {Position} from "../types";
+import {ItemState, Position} from "../types";
+import {LinkedList} from "../modules/linkedlist";
 
-
-export default class Item{
-    protected ctx: CanvasRenderingContext2D;
-    protected state = {
+export function getDefaultState() {
+    return {
         position: {
             x: 0,
             y: 0,
@@ -21,41 +20,48 @@ export default class Item{
         color: 'black',
         noOfLines: 10,
     }
+}
+
+export default class Item {
+    protected ctx: CanvasRenderingContext2D;
+    protected state: ItemState = getDefaultState()
     protected boundaries = [
-        [[0,0],[0,0]],
-        [[0,0],[0,0]],
+        [[0, 0], [0, 0]],
+        [[0, 0], [0, 0]],
     ]
 
-    constructor(ctx: CanvasRenderingContext2D,  gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined,style?: any) {
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, style?: any) {
         this.ctx = ctx;
 
         if (position) {
             this.state.position = position;
-            this.state.grid = positionToGrid(position.x,position.y)
+            this.state.grid = positionToGrid(position.x, position.y)
         } else {
             this.state.position = gridToPosition(gridX, gridY);
             this.state.grid = {
-                x:gridX,
-                y:gridY
+                x: gridX,
+                y: gridY
             }
         }
 
         // @ ts-ignore
-        if(style) {
+        if (style) {
             this.state = {...this.state, ...style};
         }
         this.calculateBoundaries()
     }
 
-    public  getBoundaries(){
+    public getBoundaries() {
         return this.boundaries;
     }
-    public isWithinBoundary (grid:number[][]){
+
+    public isWithinBoundary(grid: number[][]) {
 
         return false;
 
     }
-    public  calculateBoundaries(){
+
+    public calculateBoundaries() {
         this.boundaries[0][0][0] = this.state.position.x;
         this.boundaries[0][0][1] = this.state.position.y;
 
@@ -70,6 +76,7 @@ export default class Item{
 
 
     }
+
     public updateGrid(gridX: number, gridY: number) {
         this.state.position = gridToPosition(gridX, gridY);
         this.state.grid.x = gridX;
@@ -84,13 +91,13 @@ export default class Item{
 
         }
     }
-    public getStyle = () =>{
+    public getState = () => {
         return this.state;
     }
     public debug = {
         cordinates: () => {
             this.getBoundaries().forEach(each => {
-                each.forEach(boundary =>{
+                each.forEach(boundary => {
                     this.ctx.fillText(`${boundary[0]},${boundary[1]}`, boundary[0], boundary[1]);
                 })
 
@@ -115,4 +122,52 @@ export default class Item{
 
         }
     }
+
+    setActionState(param: { opened: boolean }) {
+        this.state.action = {...this.state.action, ...param}
+    }
+
+    getActionState() {
+        return this.state.action
+    }
 }
+
+export class StateActionItem<T> extends Item {
+    protected stateActionHistory = LinkedList<T & { second: number }>();
+
+
+    constructor(ctx: CanvasRenderingContext2D, gridX: number = 0, gridY: number = 0, position: Position | undefined = undefined, style?: any) {
+        super(ctx, gridX, gridY, position, style)
+
+    }
+
+    timeElapsedAction = (second: number) => {
+
+    }
+
+    public resetToTime = (second: number) => {
+
+    }
+    protected _resetToTime = (second: number) => {
+        let x = this.stateActionHistory.head();
+        let resetNode: typeof x;
+
+
+        while (x) {
+            if (x.val.second > second) {
+                if (x.prev) {
+                    resetNode = x.prev;
+                    x.prev.next = undefined;
+
+                    this.stateActionHistory.setCurr(x.prev)
+                }
+            }
+            x = x.next;
+        }
+
+        return resetNode
+    }
+
+
+}
+

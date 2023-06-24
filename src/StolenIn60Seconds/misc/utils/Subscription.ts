@@ -1,5 +1,5 @@
 export default class Subscription<T> {
-    fns:Function[] = [];
+    fns:Set<Function> = new Set<Function>();
     constructor() {
     }
 
@@ -10,6 +10,11 @@ export default class Subscription<T> {
 
     }
     subscribe = (fn: Function) => {
-        this.fns.push(fn)
+        this.fns.add(fn)
+        return {
+            unsubscribe: () => {
+                this.fns.delete(fn);
+            }
+        }
     }
 }

@@ -51,9 +51,6 @@ export const draw = (canvas: HTMLCanvasElement | null, canvasContainer: HTMLDivE
     canvas.width = 1000;
     canvas.height = 1400;
 
-    drawGrid(canvas, ctx)
-
-
     new Scene1(canvas,ctx,canvasContainer, () => {
         drawGrid(canvas, ctx)
     })
